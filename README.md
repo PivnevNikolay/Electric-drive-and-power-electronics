@@ -12,6 +12,7 @@ Power DRIVER ДТИ- 1/12 “Элсиэл” СМПК.758724.024-01
 ![alt-текст](https://github.com/PivnevNikolay/PTK_2M2_V_DTI_1_12/blob/master/foto/002.jpg "top")
 
 ## Технические характеристики
+
 + Габаритные размеры 100/100 мм
 + Напряжение питания: 24V (min 0.7A).
 + Произведено на https://www.seeedstudio.com/ 
