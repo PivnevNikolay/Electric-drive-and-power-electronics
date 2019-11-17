@@ -1,0 +1,3 @@
+
+1. Необходимо поменять режим загрузки для микроконтроллера **XMC1100** с ASC Bootstrap Load Mode (ASC_BSL) на User Mode (Debug) SWD0 (P0.14 & P0.15 used for SWD), затем загрузить ПО.
+2. В STM8 есть так называемые **Option Bytes**. Необходимо произвести настройки, для настройки используем ST Visual Programmer. Меняем значение AFR0 на Port C6 Alternate Function = Tim1_CH1, Port C5 Alternate Function = Tim2_CH1. Затем загрузить ПО.
