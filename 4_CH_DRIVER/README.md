@@ -10,7 +10,7 @@
 
 ![alt-текст](https://github.com/PivnevNikolay/Electric-drive-and-power-electronics/blob/master/4_CH_DRIVER/photos/001.jpg "")   
 
-
+В качестве нагрузки будем использовать гибридный шаговый мотор 42BYGH721.  
 
 ## Технические характеристики:   
 
