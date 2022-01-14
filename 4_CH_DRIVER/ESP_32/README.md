@@ -4,8 +4,8 @@
 Подключение для работы в Arduino IDE только через USB:  
    +5V   ---  +5V  
    GND  ---  GND  
-      D+  ---  D+  
-      D-   ---  D-  
+   D+   ---   D+  19
+   D-   ---   D-  18
 + Upload Speed              921600  
 + USB CDC On Boot:      Enabled
 + Upload Mode:              Internal USB  
