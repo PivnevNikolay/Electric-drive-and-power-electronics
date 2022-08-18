@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include "NuMicro.h"
+#include "system_init.h"
+
+void SYS_Init_(void)
+{
+    SYS_UnlockReg();
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    CLK->PCLKDIV = (CLK_PCLKDIV_APB0DIV_DIV1 | CLK_PCLKDIV_APB1DIV_DIV1);
+    CLK_EnableModuleClock(UART0_MODULE);
+    CLK_EnableModuleClock(TMR2_MODULE);
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL1_UART0SEL_PCLK0, CLK_CLKDIV0_UART0(1));
+    CLK_SetModuleClock(TMR2_MODULE, CLK_CLKSEL1_TMR2SEL_PCLK1, 0);
+    SystemCoreClockUpdate();
+    SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk))    |       \
+                    (SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD);
+    SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB3MFP_Msk))|(SYS_GPB_MFPL_PB3MFP_TM2);
+    //Set PA.0 ~ PA.4 to GPIO
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & ~(SYS_GPA_MFPL_PA0MFP_Msk |
+    SYS_GPA_MFPL_PA1MFP_Msk | SYS_GPA_MFPL_PA2MFP_Msk | SYS_GPA_MFPL_PA3MFP_Msk)) |
+    (SYS_GPA_MFPL_PA0MFP_GPIO | SYS_GPA_MFPL_PA1MFP_GPIO | SYS_GPA_MFPL_PA2MFP_GPIO | SYS_GPA_MFPL_PA3MFP_GPIO);
+    SYS_LockReg();
+
+}
+
+void UART0_Init(void)
+{
+    SYS_ResetModule(UART0_RST);
+    UART_Open(UART0, 115200);
+}
