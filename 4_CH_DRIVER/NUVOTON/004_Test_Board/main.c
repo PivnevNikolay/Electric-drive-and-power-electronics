@@ -24,7 +24,9 @@ void GPABGH_IRQHandler(void){
   else if(GPIO_GET_INT_FLAG(PA, BIT1)){
     GPIO_TOGGLE(PB13);
     GPIO_TOGGLE(PB12);
+    PC1=1;
     printf("press Reset button\n");
+    PC1=0;
     GPIO_CLR_INT_FLAG(PA, BIT1);
    }
   else {
@@ -91,11 +93,16 @@ int main()
     PB5=0;
     PB13=0;
     PB12=0;
+    GPIO_SetMode(PC, BIT1, GPIO_MODE_OUTPUT);
+    PC1=0;
     GPIO_SetMode(PA, BIT1 | BIT0, GPIO_MODE_INPUT); //PA.0  -> PWM button, PA.1 -> Reset Error1 and Error2 button
     GPIO_SetMode(PC, BIT0, GPIO_MODE_INPUT);        //PC.0  -> 500kHz button
     GPIO_EnableInt(PA, 0, GPIO_INT_FALLING);
     GPIO_EnableInt(PA, 1, GPIO_INT_FALLING);
     GPIO_EnableInt(PC, 0, GPIO_INT_FALLING);
+    GPIO_SET_DEBOUNCE_TIME(GPIO_DBCTL_DBCLKSRC_LIRC,  GPIO_DBCTL_DBCLKSEL_8);
+    GPIO_ENABLE_DEBOUNCE(PC, BIT0);//PC.0
+    GPIO_ENABLE_DEBOUNCE(PA, BIT0);//PA.0
     NVIC_EnableIRQ(GPIO_PAPBPGPH_IRQn);
     NVIC_EnableIRQ(GPIO_PCPDPEPF_IRQn);
     TIMER_Open(TIMER2, TIMER_TOGGLE_MODE, 1000000);
