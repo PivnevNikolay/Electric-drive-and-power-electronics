@@ -4,10 +4,14 @@
 
 #include <stdio.h>
 #include "NuMicro.h"
+#include "stdbool.h"
 
 typedef uint32_t  u32;
 typedef uint16_t  u16;
 typedef uint8_t   u8;
+
+bool pressed = true;
+bool condition = true;
 
 void GPABGH_IRQHandler(void){
   volatile u32 u32temp_1;
@@ -16,13 +20,13 @@ void GPABGH_IRQHandler(void){
     printf("press PWM button\n");
     /* Clear interrupt flag */
     GPIO_CLR_INT_FLAG(PA, BIT0);
-	}
+   }
   else if(GPIO_GET_INT_FLAG(PA, BIT1)){
     GPIO_TOGGLE(PB13);
     GPIO_TOGGLE(PB12);
     printf("press Reset button\n");
     GPIO_CLR_INT_FLAG(PA, BIT1);
-    }
+   }
   else {
     /* Un-expected interrupt. Just clear all PA interrupts */
     u32temp_1 = PA->INTSRC;
@@ -34,7 +38,8 @@ void GPABGH_IRQHandler(void){
 void GPCDEF_IRQHandler(void){
   volatile u32 u32temp_2;
   if(GPIO_GET_INT_FLAG(PC, BIT0)) {
-    GPIO_TOGGLE(PA12);
+    condition = false;
+    pressed = !pressed;
     printf("press 500kHz button\n");
     /* Clear interrupt flag */
     GPIO_CLR_INT_FLAG(PC, BIT0);
@@ -61,11 +66,14 @@ void SYS_Init(void)
     /* Switch UART0 clock source to HIRC */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL1_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
     /* Update System Core Clock */
+    CLK_EnableModuleClock(TMR2_MODULE);
+    CLK_SetModuleClock(TMR2_MODULE, CLK_CLKSEL1_TMR2SEL_HIRC,  0);
     SystemCoreClockUpdate();
     /* Set PB multi-function pins for UART0 RXD=PA.15 and TXD=PA.14 */
     SYS->GPA_MFPH = (SYS->GPA_MFPH & ~(SYS_GPA_MFPH_PA14MFP_Msk | SYS_GPA_MFPH_PA15MFP_Msk))    |       \
                     (SYS_GPA_MFPH_PA15MFP_UART0_RXD | SYS_GPA_MFPH_PA14MFP_UART0_TXD);
-
+    // Set timer toggle out pin PB.3
+    SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB3MFP_Msk))|(SYS_GPB_MFPL_PB3MFP_TM2);
     SYS_LockReg();
 }
 
@@ -90,8 +98,23 @@ int main()
     GPIO_EnableInt(PC, 0, GPIO_INT_FALLING);
     NVIC_EnableIRQ(GPIO_PAPBPGPH_IRQn);
     NVIC_EnableIRQ(GPIO_PCPDPEPF_IRQn);
+    TIMER_Open(TIMER2, TIMER_TOGGLE_MODE, 1000000);
+    TIMER_SELECT_TOUT_PIN(TIMER2, TIMER_TOUT_PIN_FROM_TX);
     printf("Hello World\n");// Test Uart0
     while(1){
+    switch (pressed){
+    case 0:
+     TIMER_Start(TIMER2);
+     PA12=1;
+     condition = true;
+    break;
+    case 1:
+     TIMER_Stop(TIMER2);
+     PA12=0;
+     condition = true;
+    break;
+    }
+ while(condition){
     GPIO_TOGGLE(PA2);
     CLK_SysTickDelay(174762);
     GPIO_TOGGLE(PA3);
@@ -101,4 +124,5 @@ int main()
     GPIO_TOGGLE(PB5);
     CLK_SysTickDelay(174762);
     }
+  }
 }
