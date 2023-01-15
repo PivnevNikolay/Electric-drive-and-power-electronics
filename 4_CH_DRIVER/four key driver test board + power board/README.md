@@ -18,5 +18,5 @@
 
 ## Структура проекта:  
 
-## Контакты:  
-+ E-mail: pivnevtosno@yandex.ru  
+## Контакты  
+* :left_speech_bubble: E-mail:  nikolay_pivnev@vk.com  
