@@ -7,6 +7,31 @@ typedef uint8_t   u8;
 
 void UART_Open(UART_T *uart, uint32_t u32baudrate);
 
+void GPABGH_IRQHandler(void){
+  volatile u32 u32temp_1;
+  if(GPIO_GET_INT_FLAG(PB, BIT2)) {
+    GPIO_TOGGLE(PA12);
+    GPIO_CLR_INT_FLAG(PB, BIT2);
+   }
+  else if(GPIO_GET_INT_FLAG(PB, BIT1)){
+    GPIO_TOGGLE(PA0);
+    GPIO_TOGGLE(PA1);
+    GPIO_TOGGLE(PA2);
+    GPIO_CLR_INT_FLAG(PB, BIT1);
+   }
+  else if(GPIO_GET_INT_FLAG(PB, BIT0)){
+    GPIO_TOGGLE(PA13);
+    GPIO_TOGGLE(PC1);
+    GPIO_CLR_INT_FLAG(PB, BIT0);
+   }
+  else {
+    // Un-expected interrupt. Just clear all PA interrupts 
+    u32temp_1 = PB->INTSRC;
+    PB->INTSRC =  u32temp_1;
+    printf("Un-expected interrupts port_A.\n");
+  }
+}
+
 void GPCDEF_IRQHandler(void){
   volatile u32 u32temp_2;
   if(GPIO_GET_INT_FLAG(PC, BIT0)) {
@@ -43,12 +68,39 @@ int main()
 {
     SYS_Init();
     UART_Open(UART0, 115200);
-    GPIO_SetMode(PB, BIT3, GPIO_MODE_OUTPUT);
-    PB3 = 0;
+    GPIO_SetMode(PA, BIT0, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PA, BIT1, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PA, BIT2, GPIO_MODE_OUTPUT);
+    PA0  = 0;
+    PA1  = 0;
+    PA2  = 0;
+    GPIO_SetMode(PB, BIT3,  GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PA, BIT12, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PA, BIT13, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PC, BIT1,  GPIO_MODE_OUTPUT);
+    PB3  = 0;
+    PA12 = 0;
+    PA13 = 0;
+    PC1  = 0;
+
     GPIO_SetMode(PC, BIT0, GPIO_MODE_INPUT);
+    GPIO_SetMode(PB, BIT0, GPIO_MODE_INPUT);
+    GPIO_SetMode(PB, BIT1, GPIO_MODE_INPUT);
+    GPIO_SetMode(PB, BIT2, GPIO_MODE_INPUT);
+
     GPIO_EnableInt(PC, 0, GPIO_INT_FALLING);
+    GPIO_EnableInt(PB, 0, GPIO_INT_FALLING);
+    GPIO_EnableInt(PB, 1, GPIO_INT_FALLING);
+    GPIO_EnableInt(PB, 2, GPIO_INT_FALLING);
+
     GPIO_SET_DEBOUNCE_TIME(GPIO_DBCTL_DBCLKSRC_LIRC,  GPIO_DBCTL_DBCLKSEL_16);
+
     GPIO_ENABLE_DEBOUNCE(PC, BIT0);
+    GPIO_ENABLE_DEBOUNCE(PB, BIT0);
+    GPIO_ENABLE_DEBOUNCE(PB, BIT1);
+    GPIO_ENABLE_DEBOUNCE(PB, BIT2);
+
     NVIC_EnableIRQ(GPIO_PCPDPEPF_IRQn);
+    NVIC_EnableIRQ(GPIO_PAPBPGPH_IRQn);
     while(1);
 }
