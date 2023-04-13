@@ -9,5 +9,9 @@ void SYS_Init(void);
 void LED_GPIO_init(void);
 void XL6009_OUTpin_init(void);
 void Button_ERRinputPIN_init(void);
+void PWM_Init_PD1(void);
+void PWM_Init_PD2_01_02(void);
+void PWM_Init_PD2_01(void);
+void PWM_Init_PD2_02(void);
 
 #endif
