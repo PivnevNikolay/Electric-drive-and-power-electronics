@@ -99,14 +99,14 @@ void Button_ERRinputPIN_init(void) {
 void PWM_Init_PD1(void) {
   // PWM0_CH2 --> 500 kHz output PA.3
   PWM_ConfigOutputChannel(PWM0, 2, 504, 50);
-  PWM_Start(PWM0, 0xF);
+  PWM_Start(PWM0, 0x4);
 }
 
 void PWM_Init_PD2_01_02(void) {
   // PWM0_CH0 output PB.5  --> 500 kHz (PD2_01)
   // PWM0_CH1 output PB.4  --> 500 kHz (COMPLEMENTARY_MODE) (PD2_02)
   PWM_ConfigOutputChannel(PWM0, 0, 504, 50);
-  PWM_Start(PWM0, 0xF);
+  PWM_Start(PWM0, 0x1);
   SYS_UnlockReg();
   PWM_EnableDeadZone(PWM0, 0, 30);
   PWM_EnableDeadZone(PWM0, 1, 30);
