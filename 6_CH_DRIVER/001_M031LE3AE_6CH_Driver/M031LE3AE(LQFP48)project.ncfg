@@ -1,0 +1,96 @@
+/****************************************************************************
+ * @file     M031LE3AE(LQFP48).ncfg
+ * @version  V1.29.0001
+ * @Date     Fri Jan 19 2024 17:08:51 GMT+0300 (Москва, стандартное время)
+ * @brief    NuMicro config file
+ *
+ * @note Please do not modify this file.
+ *       Otherwise, it may not be loaded successfully.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (C) 2013-2024 Nuvoton Technology Corp. All rights reserved.
+*****************************************************************************/
+MCU:M031LE3AE(LQFP48)
+Pin1:I2C0_SCL
+Pin2:I2C0_SDA
+Pin3:PB.3
+Pin4:PB.2
+Pin5:PB.1
+Pin6:PB.0
+Pin7:PA.11
+Pin8:PA.10
+Pin9:UART1_TXD
+Pin10:UART1_RXD
+Pin11:PF.5
+Pin12:PF.4
+Pin13:XT1_IN
+Pin14:XT1_OUT
+Pin15:PA.7
+Pin16:PA.6
+Pin17:PWM0_CH0
+Pin18:PWM0_CH1
+Pin19:PWM0_CH2
+Pin20:PWM0_CH3
+Pin21:PWM0_CH4
+Pin22:PA.0
+Pin23:PWM0_BRAKE0
+Pin24:nRESET
+Pin25:ICE_DAT
+Pin26:ICE_CLK
+Pin27:PC.5
+Pin28:PC.4
+Pin29:PC.3
+Pin30:PC.2
+Pin31:PC.1
+Pin32:PC.0
+Pin33:PA.12
+Pin34:PA.13
+Pin35:UART0_TXD
+Pin36:UART0_RXD
+Pin37:VSS
+Pin38:LDO_CAP
+Pin39:VDD
+Pin40:PC.14
+Pin41:PB.15
+Pin42:PB.14
+Pin43:PB.13
+Pin44:PB.12
+Pin45:AVDD
+Pin46:AVSS
+Pin47:PB.7
+Pin48:PB.6
+GPIOpin:39
+GPIOpin:40
+GPIOpin:41
+GPIOpin:42
+GPIOpin:43
+GPIOpin:46
+GPIOpin:47
+GPIOpin:2
+GPIOpin:3
+GPIOpin:4
+GPIOpin:10
+GPIOpin:11
+UserDefined:PC.14=>Encoder_B_in
+UserDefined:PB.15=>EN_XL6009_out
+UserDefined:PB.14=>Error_1_in
+UserDefined:PB.13=>Error_2_in
+UserDefined:PB.12=>Error_3_in
+UserDefined:PB.7=>500KHz_LED_out
+UserDefined:PB.6=>500KHz_start_stop_button
+UserDefined:PB.3=>500KHz_timer_out
+UserDefined:PB.2=>Reset_Err_CH6_button
+UserDefined:PB.1=>START_LED_out
+UserDefined:PF.5=>NC
+UserDefined:PF.4=>NC
+SYS->GPA_MFPH = 0x33000077
+SYS->GPA_MFPL = 0x00DDDDD0
+SYS->GPB_MFPH = 0x00000000
+SYS->GPB_MFPL = 0x00660000
+SYS->GPC_MFPH = 0x00000000
+SYS->GPC_MFPL = 0x00000000
+SYS->GPF_MFPH = 0xB0000000
+SYS->GPF_MFPL = 0x0000AAEE
+LockedPins=[]
+/*** (C) COPYRIGHT 2013-2024 Nuvoton Technology Corp. ***/
