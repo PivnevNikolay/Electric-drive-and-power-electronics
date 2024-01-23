@@ -1,7 +1,7 @@
 /****************************************************************************
  * @file     M031LE3AE(LQFP48).ncfg
  * @version  V1.29.0001
- * @Date     Fri Jan 19 2024 17:08:51 GMT+0300 (Москва, стандартное время)
+ * @Date     Tue Jan 23 2024 17:57:57 GMT+0300 (Москва, стандартное время)
  * @brief    NuMicro config file
  *
  * @note Please do not modify this file.
@@ -33,7 +33,7 @@ Pin18:PWM0_CH1
 Pin19:PWM0_CH2
 Pin20:PWM0_CH3
 Pin21:PWM0_CH4
-Pin22:PA.0
+Pin22:PWM0_CH5
 Pin23:PWM0_BRAKE0
 Pin24:nRESET
 Pin25:ICE_DAT
@@ -60,7 +60,6 @@ Pin45:AVDD
 Pin46:AVSS
 Pin47:PB.7
 Pin48:PB.6
-GPIOpin:39
 GPIOpin:40
 GPIOpin:41
 GPIOpin:42
@@ -72,6 +71,14 @@ GPIOpin:3
 GPIOpin:4
 GPIOpin:10
 GPIOpin:11
+GPIOpin:14
+GPIOpin:33
+GPIOpin:32
+GPIOpin:39
+GPIOpin:31
+GPIOpin:30
+GPIOpin:29
+GPIOpin:28
 UserDefined:PC.14=>Encoder_B_in
 UserDefined:PB.15=>EN_XL6009_out
 UserDefined:PB.14=>Error_1_in
@@ -84,8 +91,15 @@ UserDefined:PB.2=>Reset_Err_CH6_button
 UserDefined:PB.1=>START_LED_out
 UserDefined:PF.5=>NC
 UserDefined:PF.4=>NC
+UserDefined:PA.7=>Reset_CH6_out
+UserDefined:PA.13=>Encoder_A_in
+UserDefined:PA.12=>Encoder_button
+UserDefined:PC.0=>EN_XL6009_IN_button
+UserDefined:PC.1=>Err_Led_1_out
+UserDefined:PC.2=>Err_Led_2_out
+UserDefined:PC.3=>Err_Led_3_out
 SYS->GPA_MFPH = 0x33000077
-SYS->GPA_MFPL = 0x00DDDDD0
+SYS->GPA_MFPL = 0x00DDDDDD
 SYS->GPB_MFPH = 0x00000000
 SYS->GPB_MFPL = 0x00660000
 SYS->GPC_MFPH = 0x00000000
