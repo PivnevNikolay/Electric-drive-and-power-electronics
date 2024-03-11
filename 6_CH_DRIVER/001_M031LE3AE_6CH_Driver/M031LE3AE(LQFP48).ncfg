@@ -1,7 +1,7 @@
 /****************************************************************************
  * @file     M031LE3AE(LQFP48).ncfg
- * @version  V1.29.0001
- * @Date     Tue Jan 23 2024 17:57:57 GMT+0300 (Москва, стандартное время)
+ * @version  V1.29.0007
+ * @Date     Mon Mar 11 2024 11:00:02 GMT+0300 (Москва, стандартное время)
  * @brief    NuMicro config file
  *
  * @note Please do not modify this file.
@@ -60,6 +60,8 @@ Pin45:AVDD
 Pin46:AVSS
 Pin47:PB.7
 Pin48:PB.6
+GPIOpin:11
+GPIOpin:10
 GPIOpin:40
 GPIOpin:41
 GPIOpin:42
@@ -69,9 +71,11 @@ GPIOpin:47
 GPIOpin:2
 GPIOpin:3
 GPIOpin:4
-GPIOpin:10
-GPIOpin:11
+GPIOpin:5
 GPIOpin:14
+GPIOpin:6
+GPIOpin:7
+GPIOpin:15
 GPIOpin:33
 GPIOpin:32
 GPIOpin:39
@@ -79,6 +83,8 @@ GPIOpin:31
 GPIOpin:30
 GPIOpin:29
 GPIOpin:28
+GPIOpin:27
+GPIOpin:26
 UserDefined:PC.14=>Encoder_B_in
 UserDefined:PB.15=>EN_XL6009_out
 UserDefined:PB.14=>Error_1_in
@@ -89,15 +95,21 @@ UserDefined:PB.6=>500KHz_start_stop_button
 UserDefined:PB.3=>500KHz_timer_out
 UserDefined:PB.2=>Reset_Err_CH6_button
 UserDefined:PB.1=>START_LED_out
-UserDefined:PF.5=>NC
-UserDefined:PF.4=>NC
+UserDefined:PF.5=>SP3_out
+UserDefined:PF.4=>SP4_out
 UserDefined:PA.7=>Reset_CH6_out
-UserDefined:PA.13=>Encoder_A_in
-UserDefined:PA.12=>Encoder_button
+UserDefined:PA.13=>Encoder_Button
+UserDefined:PA.12=>Encoder_A
 UserDefined:PC.0=>EN_XL6009_IN_button
 UserDefined:PC.1=>Err_Led_1_out
 UserDefined:PC.2=>Err_Led_2_out
 UserDefined:PC.3=>Err_Led_3_out
+UserDefined:PB.0=>ADC0_CH0
+UserDefined:PA.11=>SP1_out
+UserDefined:PA.10=>SP2_out
+UserDefined:PA.6=>PWM0_BRAKE0_LED_out
+UserDefined:PC.4=>SIN_LED_out
+UserDefined:PC.5=>PWM_LED_out
 SYS->GPA_MFPH = 0x33000077
 SYS->GPA_MFPL = 0x00DDDDDD
 SYS->GPB_MFPH = 0x00000000
