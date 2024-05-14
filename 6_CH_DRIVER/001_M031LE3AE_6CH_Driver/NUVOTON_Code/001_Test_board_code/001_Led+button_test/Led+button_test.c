@@ -12,7 +12,8 @@ typedef uint8_t u8;
 #define Bit_RESET 0
 
 volatile bool i;
-volatile u8 pressed = false;
+volatile u8 pressed_500kHz = false;
+volatile u8 pressed_XL6009 = false;
 
 void LED_GPIO_init_out(void);
 void LED_GPIO_init_input(void);
@@ -21,16 +22,16 @@ void TIMER_init_out(void);
 void GPABGH_IRQHandler(void) {
   volatile uint32_t temp;
   if (GPIO_GET_INT_FLAG(PB, BIT6)) {
-    switch (pressed) {
+    switch (pressed_500kHz) {
     case 0:
       TIMER_Start(TIMER2);
       PB7 = 1;
-      pressed = true;
+      pressed_500kHz = true;
       break;
     case 1:
       TIMER_Stop(TIMER2);
       PB7 = 0;
-      pressed = false;
+      pressed_500kHz = false;
       break;
     }
     GPIO_CLR_INT_FLAG(PB, BIT6);
@@ -44,7 +45,19 @@ void GPABGH_IRQHandler(void) {
 void GPCDEF_IRQHandler(void) {
   volatile u32 u32temp_2;
   if (GPIO_GET_INT_FLAG(PC, BIT0)) {
-    GPIO_TOGGLE(PB15); // PB.15 --> EN_XL6009_out
+    switch (pressed_XL6009) {
+    case 0:
+      GPIO_EnableInt(PB, 6, GPIO_INT_FALLING);
+      PB15 = 1;
+      pressed_XL6009 = true;
+      break;
+    case 1:
+      GPIO_DisableInt(PB, 6);
+      PB15 = 0;
+      pressed_XL6009 = false;
+      break;
+    }
+    // GPIO_TOGGLE(PB15); // PB.15 --> EN_XL6009_out
     /* Clear interrupt flag */
     GPIO_CLR_INT_FLAG(PC, BIT0);
   } else {
@@ -75,13 +88,24 @@ void SYS_Init(void) {
   CLK_EnableModuleClock(TMR2_MODULE);
   CLK_SetModuleClock(TMR2_MODULE, CLK_CLKSEL1_TMR2SEL_PCLK1, 0);
   SystemCoreClockUpdate();
+  //********* PWM0_MODULE  ****************************************//
+  CLK_EnableModuleClock(PWM0_MODULE);
+  CLK_SetModuleClock(PWM0_MODULE, CLK_CLKSEL2_PWM0SEL_PCLK0, (uint32_t)NULL);
+  SYS_ResetModule(PWM0_RST); // reset PWM module
   //********* Set timer toggle out pin PB.3 ***********************//
   SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB3MFP_Msk)) |
                   (SYS_GPB_MFPL_PB3MFP_TM2);
+  //***** Set PA multi-function pins for PWM0 Channel 0 ~ 3   *****//
+  //**********  PWM0_CH0 --> PA.5  PWM0_CH1 --> PA.4   ************//
+  SYS->GPA_MFPL = (SYS->GPA_MFPL & ~(SYS_GPA_MFPL_PA5MFP_Msk | SYS_GPA_MFPL_PA4MFP_Msk)) |
+                  (SYS_GPA_MFPL_PA5MFP_PWM0_CH0 | SYS_GPA_MFPL_PA4MFP_PWM0_CH1);
+  //**********  PWM0_CH2 --> PA.3  PWM0_CH3 --> PA.2   ************//
+  SYS->GPA_MFPL = (SYS->GPA_MFPL & ~(SYS_GPA_MFPL_PA3MFP_Msk | SYS_GPA_MFPL_PA2MFP_Msk)) |
+                  (SYS_GPA_MFPL_PA3MFP_PWM0_CH2 | SYS_GPA_MFPL_PA2MFP_PWM0_CH3);
   //********* UART0 RXD=PA.15 and TXD=PA.14 ***********************//
   // SYS->GPA_MFPH = (SYS->GPA_MFPH & ~(SYS_GPA_MFPH_PA14MFP_Msk | SYS_GPA_MFPH_PA15MFP_Msk)) |
   //                (SYS_GPA_MFPH_PA15MFP_UART0_RXD | SYS_GPA_MFPH_PA14MFP_UART0_TXD);
-  //*********************** GPIO PB.15 ****************************//
+  //******************* GPIO PB.6 PB.7 PB.15 **********************//
   SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB6MFP_Msk)) | (SYS_GPB_MFPL_PB6MFP_GPIO);   // PB.6  --> 500kHz_start_stop_buttton
   SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB7MFP_Msk)) | (SYS_GPB_MFPL_PB7MFP_GPIO);   // PB.7  --> LED_500kHz_out
   SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB15MFP_Msk)) | (SYS_GPB_MFPH_PB15MFP_GPIO); // PB.15 --> EN_XL6009_out
@@ -130,7 +154,7 @@ void LED_GPIO_init_out(void) {
 //************************** input ******************************//
 void LED_GPIO_init_input(void) {
   GPIO_SetMode(PB, BIT6, GPIO_MODE_INPUT);
-  GPIO_EnableInt(PB, 6, GPIO_INT_FALLING);
+  // GPIO_EnableInt(PB, 6, GPIO_INT_FALLING);
   GPIO_SET_DEBOUNCE_TIME(GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_8);
   GPIO_ENABLE_DEBOUNCE(PB, BIT6);
   NVIC_EnableIRQ(GPIO_PAPBPGPH_IRQn);
@@ -140,7 +164,7 @@ void LED_GPIO_init_input(void) {
   GPIO_ENABLE_DEBOUNCE(PC, BIT0);
   NVIC_EnableIRQ(GPIO_PCPDPEPF_IRQn);
 }
-//************************** input ******************************//
+//********************* TIMER_500kHz ****************************//
 void TIMER_init_out(void) {
   TIMER_Open(TIMER2, TIMER_TOGGLE_MODE, 1000000);
   TIMER_SELECT_TOUT_PIN(TIMER2, TIMER_TOUT_PIN_FROM_TX);
